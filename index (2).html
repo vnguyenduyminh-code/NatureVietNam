@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khám Phá Thiên Nhiên Việt Nam | Assignment</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           CSS VARIABLES & RESET
+           ========================================= */
+        :root {
+            --primary-color: #2E7D32; /* Xanh lá đậm */
+            --secondary-color: #F9A825; /* Vàng nghệ */
+            --bg-color: #FAFAFA;
+            --text-color: #333333;
+            --light-text: #666666;
+            --white: #FFFFFF;
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Áp dụng Box Model chuẩn */
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Hình ảnh responsive mặc định */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Trạng thái focus cho tính dễ truy cập (Accessibility) */
+        a:focus, button:focus {
+            outline: 3px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        /* =========================================
+           REQUIREMENT 1: SKIP TO MAIN CONTENT LINK
+           ========================================= */
+        .skip-link {
+            position: absolute;
+            top: -50px; /* Ẩn khỏi màn hình */
+            left: 0;
+            background: var(--secondary-color);
+            color: #000;
+            padding: 12px 24px;
+            font-weight: bold;
+            text-decoration: none;
+            z-index: 9999;
+            transition: top 0.3s ease;
+        }
+
+        /* Chỉ hiển thị khi người dùng dùng phím Tab (focus) */
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* =========================================
+           REQUIREMENT 2: ACCESSIBLE & STYLED NAVIGATION
+           ========================================= */
+        .site-header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Sử dụng FLEXBOX cho layout Navbar */
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem; /* Box Model: padding */
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex; /* Flexbox cho danh sách links */
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 0.5rem 0; /* Box Model */
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hiệu ứng gạch chân khi hover */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* =========================================
+           HERO SECTION (Flexbox & Box Model)
+           ========================================= */
+        .hero {
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            min-height: 400px;
+            /* Flexbox để căn giữa nội dung */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem; /* Box model */
+        }
+
+        .hero h1 {
+            color: var(--white);
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            margin-bottom: 1rem; /* Box model */
+        }
+
+        .hero p {
+            color: #E0E0E0;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 2rem; /* Box model */
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 12px 30px; /* Box model */
+            border-radius: 4px; /* Box model */
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #1b5e20;
+            transform: translateY(-3px);
+        }
+
+        /* =========================================
+           REQUIREMENT 3 & 4: CSS GRID & BOX MODEL
+           ========================================= */
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto; /* Box model: Căn giữa khối */
+            padding: 5rem 2rem; /* Box model: Tạo không gian thở */
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 3rem; /* Box model */
+        }
+
+        /* Sử dụng CSS GRID cho danh sách điểm đến */
+        .destinations-grid {
+            display: grid;
+            /* Tự động tạo cột, tối thiểu 300px, tối đa 1 phần (responsive) */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem; /* Khoảng cách giữa các phần tử trong lưới */
+        }
+
+        /* Box Model ứng dụng vào Card */
+        .card {
+            background-color: var(--white);
+            border-radius: 12px; /* Góc bo tròn */
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Bóng đổ mềm */
+            border: 1px solid #EAEAEA; /* Viền */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            
+            /* Flexbox để quản lý nội dung bên trong Card */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img-wrapper img {
+            transform: scale(1.1); /* Hiệu ứng zoom nhẹ khi hover */
+        }
+
+        /* Box Model cho phần chữ của thẻ */
+        .card-content {
+            padding: 1.5rem; /* Box model: Khoảng cách chữ so với viền */
+            flex-grow: 1; /* Flex: Đẩy nút xuống dưới cùng nếu chữ ngắn */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem; /* Box model */
+            color: #111;
+        }
+
+        .card-text {
+            color: var(--light-text);
+            margin-bottom: 1.5rem; /* Box model */
+            flex-grow: 1; /* Flex */
+        }
+
+        .card-link {
+            align-self: flex-start; /* Flexbox */
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .card-link:hover {
+            border-color: var(--primary-color);
+        }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+        .site-footer {
+            background-color: #222;
+            color: #ccc;
+            padding: 3rem 2rem;
+            margin-top: auto; /* Đẩy footer xuống cuối trang (nhờ body display flex) */
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive cho thiết bị di động */
+        @media (max-width: 768px) {
+            .main-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Requirement 1: Skip To Main Content Link -->
+    <a href="#main-content" class="skip-link">Skip to Main Content</a>
+
+    <!-- Requirement 2: Accessible Navigation -->
+    <header class="site-header">
+        <nav class="main-nav" aria-label="Main Navigation">
+            <a href="#" class="logo" aria-label="NatureVN Home">NatureVN.</a>
+            <ul class="nav-links">
+                <li><a href="#home">Trang chủ</a></li>
+                <li><a href="#destinations">Điểm đến</a></li>
+                <li><a href="#gallery">Thư viện ảnh</a></li>
+                <li><a href="#contact">Liên hệ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Thẻ <main> cho khả năng truy cập (Accessibility) -->
+    <main id="main-content">
+        
+        <!-- Hero Section -->
+        <section id="home" class="hero" aria-labelledby="hero-title">
+            <h1 id="hero-title">Vẻ Đẹp Vượt Thời Gian</h1>
+            <p>Khám phá những cảnh quan hùng vĩ, những khu rừng nguyên sinh và những bãi biển tuyệt đẹp trải dài trên mảnh đất hình chữ S.</p>
+            <a href="#destinations" class="btn-primary">Bắt Đầu Khám Phá</a>
+        </section>
+
+        <!-- Destinations Section (Sử dụng Grid & Box Model) -->
+        <section id="destinations" class="section-container" aria-labelledby="destinations-title">
+            <h2 id="destinations-title" class="section-title">Điểm Đến Nổi Bật</h2>
+            
+            <!-- Requirement 3: Grid Property -->
+            <div class="destinations-grid">
+                
+                <!-- Thẻ 1 -->
+                <article class="card">
+                    <div class="card-img-wrapper">
+                        <!-- Cập nhật link ảnh thật cho Vịnh Hạ Long -->
+                        <img src="https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=800&auto=format&fit=crop" alt="Quang cảnh Vịnh Hạ Long với những dãy núi đá vôi">
+                    </div>
+                    <!-- Requirement 4: Box Model applied to .card-content -->
+                    <div class="card-content">
+                        <h3 class="card-title">Vịnh Hạ Long</h3>
+                        <p class="card-text">Di sản thiên nhiên thế giới với hàng nghìn hòn đảo đá vôi kỳ vĩ nổi lên từ mặt nước xanh ngọc bích.</p>
+                        <a href="#" class="card-link" aria-label="Tìm hiểu thêm về Vịnh Hạ Long">Tìm hiểu thêm &rarr;</a>
+                    </div>
+                </article>
+
+                <!-- Thẻ 2 -->
+                <article class="card">
+                    <div class="card-img-wrapper">
+                        <!-- Cập nhật link ảnh thật cho Sapa -->
+                        <img src="https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?q=80&w=800&auto=format&fit=crop" alt="Ruộng bậc thang Mù Cang Chải, Sapa mùa lúa chín">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Ruộng Bậc Thang Sapa</h3>
+                        <p class="card-text">Bức tranh thiên nhiên tuyệt mỹ được vẽ nên bởi bàn tay con người qua hàng trăm năm trên các sườn đồi dốc.</p>
+                        <a href="#" class="card-link" aria-label="Tìm hiểu thêm về Sapa">Tìm hiểu thêm &rarr;</a>
+                    </div>
+                </article>
+
+                <!-- Thẻ 3 -->
+                <article class="card">
+                    <div class="card-img-wrapper">
+                        <!-- Cập nhật link ảnh thật cho Phong Nha -->
+                        <img src="https://images.unsplash.com/photo-1550950158-d0d960dff51b?q=80&w=800&auto=format&fit=crop" alt="Cửa hang động Phong Nha Kẻ Bàng với thạch nhũ">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Phong Nha - Kẻ Bàng</h3>
+                        <p class="card-text">Hệ thống hang động kỳ bí và tráng lệ nhất thế giới nằm sâu trong lòng vườn quốc gia nhiệt đới.</p>
+                        <a href="#" class="card-link" aria-label="Tìm hiểu thêm về Phong Nha">Tìm hiểu thêm &rarr;</a>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>&copy; 2026 NatureVN. Bài tập thực hành Web Design (Grid, Flexbox, Box Model).</p>
+        </div>
+    </footer>
+
+</body>
+</html>
